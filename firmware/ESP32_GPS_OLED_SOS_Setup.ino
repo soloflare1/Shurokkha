@@ -10,19 +10,19 @@ Preferences prefs;
 
 Adafruit_SSD1306 d(128, 64, &Wire, -1);
 
+
 int btn = 4;
-int buzzer = 26;
+int buzzer = 5;
+
 
 int pressCount = 0;
-unsigned long lastPress = 0;
-unsigned long lastOledUpdate = 0;
+unsigned long lastPressTime = 0;
+bool sosExecuted = false;
 
 float lat = 0, lng = 0;
-float lastLat = 0, lastLng = 0;
 
-//  HOME SCREEN 
+
 void showHome() {
-
   d.clearDisplay();
   d.setTextColor(WHITE);
 
@@ -32,13 +32,28 @@ void showHome() {
 
   d.setTextSize(1);
   d.setCursor(0, 25);
-
-  d.print("DATE: 29/5/2026");
+  d.println("GPS TRACKING ACTIVE");
 
   d.setCursor(0, 40);
-  d.print("TIME: 04:40");
+  d.println("SOS READY MODE");
 
   d.display();
+}
+
+
+bool buttonPressed() {
+  static bool lastState = HIGH;
+
+  bool currentState = digitalRead(btn);
+
+  if (lastState == HIGH && currentState == LOW) {
+    delay(50); // debounce
+    lastState = currentState;
+    return true;
+  }
+
+  lastState = currentState;
+  return false;
 }
 
 
@@ -57,47 +72,52 @@ void setup() {
     while (1);
   }
 
-  d.clearDisplay();
-  d.display();
-
   prefs.begin("gps", false);
 
-  lastLat = prefs.getFloat("lat", 0);
-  lastLng = prefs.getFloat("lng", 0);
+  lat = prefs.getFloat("lat", 0);
+  lng = prefs.getFloat("lng", 0);
 }
 
 
 void loop() {
 
-  
+  // GPS READ
   while (gpsSerial.available()) {
     gps.encode(gpsSerial.read());
   }
 
+  // ---------------- GPS  ----------------
   if (gps.location.isValid()) {
 
-    lat = gps.location.lat();
-    lng = gps.location.lng();
+    float newLat = gps.location.lat();
+    float newLng = gps.location.lng();
 
-    if (abs(lat - lastLat) > 0.00001 || abs(lng - lastLng) > 0.00001) {
+    if (newLat != 0 && newLng != 0) {
+
+      lat = newLat;
+      lng = newLng;
 
       prefs.putFloat("lat", lat);
       prefs.putFloat("lng", lng);
-
-      lastLat = lat;
-      lastLng = lng;
     }
+
+  } else {
+    lat = prefs.getFloat("lat", lat);
+    lng = prefs.getFloat("lng", lng);
   }
 
-  // btn
-  if (digitalRead(btn) == LOW) {
-    delay(200);
+  // ---------------- BUTTON DETECTION ----------------
+  if (buttonPressed()) {
+
     pressCount++;
-    lastPress = millis();
-    while (digitalRead(btn) == LOW);
+    lastPressTime = millis();
+    sosExecuted = false;
+
+    Serial.print("Press Count: ");
+    Serial.println(pressCount);
   }
 
-  // NO PRESS -> ONLY LOCATION
+  // ---------------- NORMAL MODE ----------------
   if (pressCount == 0) {
 
     Serial.print("LAT: ");
@@ -105,66 +125,52 @@ void loop() {
 
     Serial.print("LNG: ");
     Serial.println(lng, 6);
-  }
 
-  // HOME SCREEN 
-  if (pressCount == 0 && millis() - lastOledUpdate > 1000) {
     showHome();
-    lastOledUpdate = millis();
+    delay(800);
   }
 
-  // SOS MODE
-  if (pressCount > 0 && millis() - lastPress > 2000) {
+  // ---------------- SOS TRIGGER ----------------
+  if (pressCount > 0 && millis() - lastPressTime > 1200 && !sosExecuted) {
 
-    
-    if (pressCount == 2 || pressCount == 3) {
+    sosExecuted = true;
 
-      Serial.println("HELP 🚨");
+    Serial.println("SOS TRIGGERED");
 
-      Serial.print("LAT: ");
-      Serial.println(lat, 6);
+    Serial.print("LAT: ");
+    Serial.println(lat, 6);
 
-      Serial.print("LNG: ");
-      Serial.println(lng, 6);
+    Serial.print("LNG: ");
+    Serial.println(lng, 6);
 
-      Serial.print("MAP: https://maps.google.com/?q=");
-      Serial.print(lat, 6);
-      Serial.print(",");
-      Serial.println(lng, 6);
-    }
+    Serial.print("MAP: https://maps.google.com/?q=");
+    Serial.print(lat, 6);
+    Serial.print(",");
+    Serial.println(lng, 6);
 
+    // ---------------- SILENT MODE ----------------
     if (pressCount == 2) {
 
+      Serial.println("MODE: SILENT SOS");
+
       d.clearDisplay();
-      d.setTextColor(WHITE);
-
-      d.setTextSize(1);
-      d.setCursor(35, 15);
-      d.println("SILENT");
-
       d.setTextSize(2);
-      d.setCursor(45, 35);
-      d.println("SOS");
-
+      d.setCursor(20, 25);
+      d.println("SILENT");
       d.display();
 
       digitalWrite(buzzer, LOW);
     }
 
-    
+    // ---------------- LOUD MODE ----------------
     else if (pressCount == 3) {
 
+      Serial.println("MODE: LOUD SOS");
+
       d.clearDisplay();
-      d.setTextColor(WHITE);
-
-      d.setTextSize(1);
-      d.setCursor(40, 15);
-      d.println("LOUD");
-
       d.setTextSize(2);
-      d.setCursor(45, 35);
-      d.println("SOS");
-
+      d.setCursor(30, 25);
+      d.println("LOUD");
       d.display();
 
       for (int i = 0; i < 10; i++) {
@@ -175,7 +181,8 @@ void loop() {
       }
     }
 
-    delay(2500);
+    delay(2000);
     pressCount = 0;
+    sosExecuted = false;
   }
 }
