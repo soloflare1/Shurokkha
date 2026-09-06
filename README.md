@@ -4,6 +4,8 @@
 
 SHUROKKHA is an ESP32-based wearable personal safety device that allows a user to trigger an emergency alert with a simple button press. On activation, the device retrieves the current GPS location and automatically sends an emergency email — including a Google Maps link to the user's location — to a pre-configured emergency contact. The system supports two alert modes: a **Silent SOS** for situations requiring discretion, and a **Loud SOS** with an audible buzzer.
 
+Demo video: [Watch on LinkedIn](https://lnkd.in/p/gKRJxK_p)
+
 ---
 
 ## Overview
