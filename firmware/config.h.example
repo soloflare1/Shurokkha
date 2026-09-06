@@ -1,0 +1,25 @@
+// ============================================================
+// SHUROKKHA - Configuration Template
+// ============================================================
+// 1. Copy this file and rename the copy to "config.h"
+// 2. Fill in your own WiFi and email credentials below
+// 3. config.h is in .gitignore and will NEVER be committed
+// ============================================================
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// ---- WiFi credentials ----
+#define WIFI_SSID "your_wifi_ssid"
+#define WIFI_PASS "your_wifi_password"
+
+// ---- SMTP (email) credentials ----
+// Use a Gmail "App Password", NOT your real Gmail password.
+// Generate one at: https://myaccount.google.com/apppasswords
+#define SMTP_HOST "smtp.gmail.com"
+#define SMTP_PORT 465
+#define MAIL_USER "your_email@gmail.com"
+#define MAIL_PASS "your_16_char_app_password"
+#define MAIL_TO   "emergency_contact_email@gmail.com"
+
+#endif
