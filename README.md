@@ -4,7 +4,7 @@
 
 SHUROKKHA is an ESP32-based wearable personal safety device that allows a user to trigger an emergency alert with a simple button press. On activation, the device retrieves the current GPS location and automatically sends an emergency email — including a Google Maps link to the user's location — to a pre-configured emergency contact. The system supports two alert modes: a **Silent SOS** for situations requiring discretion, and a **Loud SOS** with an audible buzzer.
 
-Demo video: [Watch on LinkedIn](https://lnkd.in/p/gKRJxK_p)
+Demo video: [Watch](https://lnkd.in/p/gKRJxK_p)
 
 ---
 
@@ -51,37 +51,8 @@ Demo video: [Watch on LinkedIn](https://lnkd.in/p/gKRJxK_p)
 
 <table align="center">
   <tr>
-    <td align="center" width="25%">
-      <img src="images/07_esp32_devkit.png" height="130" alt="ESP32 DevKit"/><br/>
-      <sub><strong>ESP32 DevKit</strong><br/>Main controller</sub>
-    </td>
-    <td align="center" width="25%">
-      <img src="images/01_neo6m_gps.png" height="130" alt="NEO-6M GPS Module"/><br/>
-      <sub><strong>NEO-6M GPS Module</strong><br/>Location data</sub>
-    </td>
-    <td align="center" width="25%">
-      <img src="images/03_oled_display.png" height="130" alt="OLED Display"/><br/>
-      <sub><strong>OLED Display</strong><br/>SSD1306, 1.3"</sub>
-    </td>
-    <td align="center" width="25%">
-      <img src="images/06_boost_converter.png" height="130" alt="Boost Converter"/><br/>
-      <sub><strong>Boost Converter</strong><br/>Voltage step-up</sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="images/02_sos_button.png" height="90" alt="SOS Button"/><br/>
-      <sub><strong>SOS Push Button</strong><br/>Emergency trigger</sub>
-    </td>
-    <td align="center">
-      <img src="images/05_buzzer.png" height="90" alt="Buzzer"/><br/>
-      <sub><strong>Buzzer Module</strong><br/>Audible alert</sub>
-    </td>
-    <td align="center">
-      <img src="images/04_18650_battery.png" height="90" alt="18650 Battery"/><br/>
-      <sub><strong>18650 Li-ion Battery</strong><br/>Power source</sub>
-    </td>
-    <td></td>
+      <img src="images/project.png" height="130" alt="project"/><br/>
+   
   </tr>
 </table>
 
