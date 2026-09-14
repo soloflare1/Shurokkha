@@ -47,12 +47,9 @@ Demo video: [Watch](https://lnkd.in/p/gKRJxK_p)
 | Boost Converter (LM2596-style) | Steps battery voltage up to the required operating voltage |
 | Breadboard and Jumper Wires | Prototype circuit assembly |
 
-**Components used in this project:**
-
 <table align="center">
   <tr>
-      <img src="images/project.png" height="130" alt="project"/><br/>
-   
+      <img src="images/project.png" height="400" alt="project"/><br/>
   </tr>
 </table>
 
